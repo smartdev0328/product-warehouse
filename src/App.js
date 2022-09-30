@@ -1,12 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
+import { useRoutes, Router, BrowserRouter } from 'react-router-dom'
+import routes from './routes';
 
 function App() {
+  const content = useRoutes(routes)
   return (
     <div className="App">
-      <h1 class="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      {content}
     </div>
   );
 }
