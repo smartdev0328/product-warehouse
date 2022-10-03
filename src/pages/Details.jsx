@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from '../components/details/Card';
 import Sticky from "../components/details/Sticky";
+import { getAllCategories } from '../api/type.api';
 
 export default function Details() {
 
@@ -94,7 +95,23 @@ export default function Details() {
       cost: 12312
     },
   ]
+  const [listData, setListData] = useState([])
 
+  useEffect(() => {
+    const getCategories = async () => {
+      const data = await getAllCategories();
+      const categoryList = [{ id: 0, name: "ALL" }];
+      data.forEach(element => {
+        categoryList.push({ id: element._id, name: element.name });
+      });
+      setListData(categoryList);
+    }
+    getCategories();
+  }, [])
+
+  const categoryChange = (categoryId) => {
+    console.log(categoryId)
+  }
   return (
     <>
       <div className='w-full'>
@@ -108,7 +125,7 @@ export default function Details() {
           }
         </div>
       </div>
-      <Sticky />
+      <Sticky listData={listData} onClickList={categoryChange} />
     </>
   )
 }
