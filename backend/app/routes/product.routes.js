@@ -9,6 +9,6 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/product/list", controller.allProducts);
-
+  app.post("/api/product/add", controller.addProduct);
+  app.get("/api/product/list", controller.getProductList)
 };

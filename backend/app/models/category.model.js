@@ -8,8 +8,9 @@ const Category = mongoose.model(
   })
 );
 
+
 Category.initData = async () => {
-  await category.deleteMany({}, function () {
+  await Category.deleteMany({}, function () {
     console.log("categorys table is initialized");
   });
   const category1 = new Category({

@@ -1,4 +1,4 @@
-const controller = require("../controllers/type.controller");
+const controller = require("../controllers/category.controller");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {

@@ -5,7 +5,7 @@ const db = {};
 
 db.mongoose = mongoose;
 
-db.user = require("./product.model");
-db.type = require("./category.model");
+db.product = require("./product.model");
+db.category = require("./category.model");
 
 module.exports = db;

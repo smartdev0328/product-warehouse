@@ -1,8 +1,8 @@
 const db = require("../models");
-const Type = db.type;
+const Category = db.category;
 
 exports.getAllList = (req, res) => {
-  Type.
+  Category.
     find().
     exec((err, types) => {
       if (err) {

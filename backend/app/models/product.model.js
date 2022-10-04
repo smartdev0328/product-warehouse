@@ -7,16 +7,13 @@ const Product = mongoose.model(
     SKU: String,
     brand: String,
     cost: Number,
-    type: {
+    category: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Type"
+      ref: "Category"
     },
     specific: Object,
   })
 );
 
-Product.getAll = () => {
-
-}
 
 module.exports = Product;

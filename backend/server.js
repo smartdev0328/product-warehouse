@@ -25,7 +25,7 @@ db.mongoose
   })
   .then(() => {
     console.log("Successfully connect to MongoDB.");
-    db.type.initData()
+    db.category.initData()
 
     //initial();
   })
@@ -36,7 +36,7 @@ db.mongoose
 
 // routes
 require("./app/routes/product.routes")(app);
-require("./app/routes/type.routes")(app);
+require("./app/routes/category.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

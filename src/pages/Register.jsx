@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
-import { getAllCategories } from "../api/type.api";
+import { getAllCategories } from "../api/category.api";
+import { addProduct } from "../api/product.api";
 
 // category data structure is following.
 // const categories = [
@@ -63,15 +64,36 @@ export default function Register() {
   const [categories, setCategories] = useState([]);
   const [specAttr, setSpecAttr] = useState([]);
   const [data, setData] = useState({});
+  const [spec, setSpec] = useState({});
   const changeCategory = (e) => {
     //console.log(e.target.value)
-    setSpecAttr(categories[e.target.value].spec);
+    if (e.target.value == 0) {
+      setData({});
+      return
+    }
+    const selected = categories.filter(item => item._id == e.target.value)[0];
+    setSpecAttr(selected.spec);
+    setSpec({});
     handleChange(e);
   }
 
+  const specChange = (e) => {
+    if (e.target.value == 0) {
+      setSpec({});
+    }
+    setSpec({
+      ...spec,
+      [e.target.name]: e.target.value
+    })
+  }
   const register = (e) => {
     e.preventDefault();
-    console.log(data)
+    const submitData = { ...data, spec: { ...spec } }
+    addProduct(submitData).then(result => {
+      alert(result.data.message);
+    }).catch((err) => {
+      console.log(err);
+    })
   }
 
   const handleChange = (event) => {
@@ -81,10 +103,10 @@ export default function Register() {
   }
   useEffect(() => {
     const getCategories = async () => {
-      const data = await getAllCategories();
-      setCategories(data);
-      setData({ ...data, })
-      setSpecAttr(data[0].spec);
+      const retData = await getAllCategories();
+      setCategories(retData);
+      setData({ ...data, category: retData[0].name })
+      setSpecAttr(retData[0].spec);
     }
     getCategories();
   }, [])
@@ -95,13 +117,15 @@ export default function Register() {
       if ((typeof specAttr[key]) == 'object') {
         const specKey = Object.keys(specAttr[key])[0];
         const attrNames = specAttr[key][specKey];
+        //setSpec({ ...spec, [specKey]: attrNames[0] })
         result.push(
           <div className="flex items-center justify-between my-4" key={key}>
             {specKey}:
-            <select onChange={handleChange} name={specKey} defaultValue={'Choose one'} className="rounded-md w-48 text-black p-1">
+            <select onChange={specChange} name={specKey} defaultValue={'Choose one'} className="rounded-md w-48 text-black p-1">
+              <option value={0}>Select One</option>
               {
                 attrNames.map((item, idx) => (
-                  <option value={idx} key={idx}>{item}</option>
+                  <option value={item} key={idx}>{item}</option>
                 ))
               }
             </select>
@@ -112,7 +136,7 @@ export default function Register() {
         result.push(
           <div className="flex items-center justify-between my-4" key={key}>
             {specAttr[key]}:
-            <input name='specAttr[key]' className="w-48 rounded-md outline-none px-3 py-1 text-black focus:outline-cyan-300"></input>
+            <input name={specAttr[key]} type="number" onChange={specChange} className="w-48 rounded-md outline-none px-3 py-1 text-black focus:outline-cyan-300"></input>
           </div>
         )
       }
@@ -126,9 +150,10 @@ export default function Register() {
           <div className="flex items-center justify-between my-4">
             Category:
             <select name='category' onChange={changeCategory} defaultValue={'Choose one'} className="rounded-md w-48 text-black p-1">
+              <option value={0}>Select One</option>
               {
                 categories.map((item, idx) => (
-                  <option value={idx} key={idx}>{item.name}</option>
+                  <option value={item._id} key={idx}>{item.name}</option>
                 ))
               }
             </select>
@@ -147,7 +172,7 @@ export default function Register() {
           </div>
           <div className="flex items-center justify-between my-4">
             Cost:
-            <input onChange={handleChange} name='cost' className="w-48 rounded-md outline-none px-3 py-1 text-black focus:outline-cyan-300"></input>
+            <input onChange={handleChange} type="number" name='cost' className="w-48 rounded-md outline-none px-3 py-1 text-black focus:outline-cyan-300"></input>
           </div>
           {
             drawSpecAttr()
